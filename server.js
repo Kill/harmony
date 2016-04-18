@@ -11,17 +11,16 @@ var app = express(),
     port = process.env.PORT || 8080,
     router = express.Router();
 
-app.listen(port);
-
 app.engine('html', require('ejs').__express);
 app.set('views', __dirname + '/templates');
 app.set('view engine', 'html');
 app.use('/static', express.static(__dirname + '/public'));
 
-app.use('/', router);
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+app.use('/', router);
+app.listen(port);
 
 router.route('/')
     .get(function(req, res) {
@@ -29,9 +28,11 @@ router.route('/')
             title: "eharmony test api"
         })
     });
+
 router.route('/users')
     .post(function(req, res){
         var user = new User(req.body);
+        console.log(req);
         user.save();
         res.status(201).send(user);
     })
